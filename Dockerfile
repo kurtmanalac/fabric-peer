@@ -1,12 +1,12 @@
+FROM hyperledger/fabric-ca:1.5.5 as ca-source
+
 FROM hyperledger/fabric-peer:3.1.1
 USER root
-RUN apt-get update && apt-get install -y curl jq wget tar && apt-get clean
-RUN wget https://github.com/hyperledger/fabric-ca/releases/download/v1.5.5/hyperledger-fabric-ca-linux-amd64-1.5.5.tar.gz && \
-    tar -xzf hyperledger-fabric-ca-linux-amd64-1.5.5.tar.gz && \
-    cp fabric-ca-client /usr/local/bin/ && \
-    chmod +x /usr/local/bin/fabric-ca-client && \
-    rm -rf fabric-ca-client fabric-ca-server *.tar.gz
-    
+RUN apt-get update && apt-get install -y curl jq && apt-get clean
+
+COPY --from=ca-source /usr/local/bin/fabric-ca-client /usr/local/bin/
+COPY --from=ca-source /usr/local/bin/fabric-ca-server /usr/local/bin/
+
 RUN mkdir -p /app/data/config
 RUN mkdir -p /app/data/files
 
