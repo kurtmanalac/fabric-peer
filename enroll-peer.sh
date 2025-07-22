@@ -5,8 +5,8 @@ set -e
 
 # --- CONFIGURATION ---
 CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal:7054}
-ENROLL_ID=${ENROLL_ID:-peer1}
-ENROLL_PW=${ENROLL_PW:-peer1pw}
+# ENROLL_ID=${ENROLL_ID:-peer1}
+# ENROLL_PW=${ENROLL_PW:-peer1pw}
 MSP_DIR=${MSP_DIR:-/app/data/msp}
 FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
