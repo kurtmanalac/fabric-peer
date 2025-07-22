@@ -4,12 +4,13 @@ FROM hyperledger/fabric-peer:3.1.1
 USER root
 RUN apt-get update && apt-get install -y curl jq && apt-get clean
 
-COPY --from=ca-source /usr/local/bin/fabric-ca-client /usr/local/bin/fabric-ca-client
-COPY --from=ca-source /usr/local/bin/fabric-ca-server /usr/local/bin/fabric-ca-server
+COPY --from=ca-source /usr/local/bin/fabric-ca-client /usr/local/bin/
+COPY --from=ca-source /usr/local/bin/fabric-ca-server /usr/local/bin/
 
 RUN mkdir -p /app/data/config
 RUN mkdir -p /app/data/files
 
+ENV PATH="/usr/local/bin:$PATH"
 ENV FABRIC_CFG_PATH=/app/data/config
 ENV CORE_PEER_FILESYSTEMPATH=/app/data/files
 
