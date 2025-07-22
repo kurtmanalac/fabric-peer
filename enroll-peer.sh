@@ -4,7 +4,7 @@
 set -e
 
 # --- CONFIGURATION ---
-CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal}
+CA_URL=${CA_URL:-github-fabric-ca}
 ENROLL_ID=${ENROLL_ID:-peer1}
 ENROLL_PW=${ENROLL_PW:-peer1pw}
 MSP_DIR=${MSP_DIR:-/app/data/msp}
