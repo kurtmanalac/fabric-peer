@@ -32,7 +32,7 @@ export FABRIC_CA_CLIENT_HOME
 
 # --- Enroll the peer identity ---
 echo "🔐 Enrolling peer with Fabric CA..."
-/usr/local/bin/fabric-ca-client enroll \
+fabric-ca-client enroll \
   -u http://$ENROLL_ID:$ENROLL_PW@${CA_URL#http://} \
   --mspdir "$MSP_DIR"
 
