@@ -7,7 +7,6 @@ ENV FABRIC_CFG_PATH=/app/data/config
 ENV CORE_PEER_FILESYSTEMPATH=/app/data/files
 
 WORKDIR /app/data
-COPY enroll-peer.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/enroll-peer.sh
-
-CMD ["/usr/local/bin/enroll-peer.sh"]
+COPY enroll-peer.sh /enroll-peer.sh
+RUN chmod +x /enroll-peer.sh
+CMD ["/enroll-peer.sh"]
