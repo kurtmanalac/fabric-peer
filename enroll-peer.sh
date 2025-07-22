@@ -13,7 +13,7 @@ FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
 
 # --- Wait for the CA to be reachable ---
 echo "⏳ Waiting for Fabric CA at $CA_URL..."
-until curl -s --head "$CA_URL" | grep "200 OK" > /dev/null; do
+until curl -s --head "$CA_URL/cainfo" | grep "200 OK" > /dev/null; do
   sleep 2
 done
 echo "✅ Fabric CA is reachable."
