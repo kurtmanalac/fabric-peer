@@ -27,9 +27,9 @@ curl -X POST $CA_URL/enroll \
     -d "$command_json"
 
 # --- Sync folders to be exposed ---
-echo "Exposing $source..."
-curl -X GET $CA_URL/mkdir/$ENROLL_ID
-curl -I "${CA_URL}/app/data/"
+# echo "Exposing $source..."
+# curl -X GET $CA_URL/mkdir/$ENROLL_ID
+# curl -I "${CA_URL}/app/data/"
 # --- Copy MSP files ---
 
 echo "Zipping MSP files from $source..."
