@@ -38,13 +38,13 @@ dest_json=$(jq -n --arg cmd "$dest" '{destinationPath: $cmd}')
 echo "🔐 Enrolling peer with Fabric CA..."
 curl -X POST $CA_URL/enroll \
     -H "Content-Type: application/json" \
-    -d $command_json
+    -d "$command_json"
 
 # --- Copy MSP files ---
 echo "Copying MSP files..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
-    -d $source_json, $dest_json
+    -d "$source_json, $dest_json"
 
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
