@@ -4,23 +4,21 @@
 set -e
 
 # --- CONFIGURATION ---
-CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal:7054}
-# ENROLL_ID=${ENROLL_ID:-peer1}
-# ENROLL_PW=${ENROLL_PW:-peer1pw}
-MSP_DIR=${MSP_DIR:-/app/data/msp}
-FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
+CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal:8000}
+# MSP_DIR=${MSP_DIR:-/app/data/msp}
+FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data}
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
 
 # --- Wait for the CA to be reachable ---
-echo "⏳ Waiting for Fabric CA at $CA_URL..."
-until curl -s --head "$CA_URL/cainfo" | grep "200 OK" > /dev/null; do
-  sleep 2
-done
-echo "✅ Fabric CA is reachable."
+# echo "⏳ Waiting for Fabric CA at $CA_URL..."
+# until curl -s --head "$CA_URL/cainfo" | grep "200 OK" > /dev/null; do
+#   sleep 2
+# done
+# echo "✅ Fabric CA is reachable."
 
 # --- Setup Directories ---
-mkdir -p "$FABRIC_CA_CLIENT_HOME"
-mkdir -p "$MSP_DIR"
+# mkdir -p "$FABRIC_CA_CLIENT_HOME"
+# mkdir -p "$MSP_DIR"
 
 # # --- Download TLS CA cert ---
 # echo "⬇️  Downloading CA certificate..."
@@ -32,9 +30,15 @@ export FABRIC_CA_CLIENT_HOME
 
 # --- Enroll the peer identity ---
 echo "🔐 Enrolling peer with Fabric CA..."
-$CA_URL/fabric-ca-client enroll \
-  -u http://$ENROLL_ID:$ENROLL_PW@${CA_URL#http://} \
-  --mspdir "$MSP_DIR"
+curl -X POST $CA_URL/enroll \
+    -H "Content-Type: application/json" \
+    -d '{"command": "fabric-ca-client enroll -u {{ENROLL_ID}}:{{ENROLL_PW}}@localhost:7054 --mspdir {{FABRIC_CA_CLIENT_HOME}}/{{ENROLL_ID}}"}'
+
+# --- Copy MSP files ---
+echo "Copying MSP files..."
+curl -X POST $CA_URL/copy-msp \
+    -H "Content-Type: application/json" \
+    -d '{"sourcePath": "{{FABRIC_CA_CLIENT_HOME}}/{{ENROLL_ID}}"}, {"destinationPath": "{{CORE_PEER_MSPCONFIGPATH}}"}'
 
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."

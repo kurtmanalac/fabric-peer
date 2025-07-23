@@ -11,10 +11,10 @@ RUN mkdir -p /app/data/msp
 
 # ENV PATH="/usr/local/bin:$PATH"
 # ENV FABRIC_CFG_PATH=/app/data/config
-# ENV CORE_PEER_FILESYSTEMPATH=/app/data/files
-# ENV CORE_PEER_MSPCONFIGPATH=/app/data/msp
+ENV CORE_PEER_FILESYSTEMPATH=/app/data/files
+ENV CORE_PEER_MSPCONFIGPATH=/app/data/msp
 
 WORKDIR /app/data
-COPY enroll-peer.sh /enroll-peer.sh
-RUN chmod +x /enroll-peer.sh
-# CMD ["/enroll-peer.sh"]
+COPY enroll-peer.sh /app/data/enroll-peer.sh
+RUN chmod +x /app/data/enroll-peer.sh
+CMD ["/app/data/enroll-peer.sh"]
