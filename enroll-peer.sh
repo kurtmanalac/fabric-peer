@@ -29,8 +29,8 @@ curl -X POST $CA_URL/enroll \
 # wait $ENROLL_PID
 
 # --- Sync folders to be exposed ---
-echo "Exposing $source..."
-curl -X GET $CA_URL/mkdir/$ENROLL_ID
+# echo "Exposing $source..."
+# curl -X GET $CA_URL/mkdir/$ENROLL_ID
 curl -I $CA_URL/app/
 # --- Copy MSP files ---
 
