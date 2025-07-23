@@ -37,6 +37,7 @@ curl -X POST $CA_URL/zip-folder \
     -H "Content-Type: application/json" \
     -d "$zip_json"
 
+curl -I $source
 echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
