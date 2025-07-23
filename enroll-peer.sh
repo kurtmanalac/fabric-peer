@@ -41,7 +41,7 @@ curl -X POST $CA_URL/enroll \
     -d "$command_json"
 
 # --- Copy MSP files ---
-echo "Copying MSP files..."
+echo "Copying MSP files from $source to $dest..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
     -d "$source_json, $dest_json"
