@@ -35,7 +35,7 @@ curl -X GET $CA_URL/mkdir/$ENROLL_ID
 echo "Zipping MSP files from $source..."
 curl -X POST $CA_URL/zip-folder \
     -H "Content-Type: application/json" \
-    -d "$zip_json" &
+    -d "$zip_json"
 
 echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
