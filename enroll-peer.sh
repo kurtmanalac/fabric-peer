@@ -9,9 +9,9 @@ MSP_DIR=${MSP_DIR:-/app/data/fabric-ca-client/$ENROLL_ID/msp}
 FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client/}
 command=${command:-fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@localhost:7054 --mspdir $MSP_DIR}
 command_json=$(jq -n --arg cmd "$command" '{command: $cmd}')
-source=${source:-$CA_URL$FABRIC_CA_CLIENT_HOME$ENROLL_ID}
+source=${source:-$CA_URL$MSP_DIR}
 zip_json=$(jq -n --arg src "$source" '{sourcePath: $src, zipPath: ($src+".zip")}')
-destination=${destination:-$MSP_DIR}
+destination=${destination:-/app/data/$ENROLL_ID/msp}
 path_json=$(jq -n --arg src "$source" --arg dest "$destination" '{sourcePath: ($src + ".zip"), destinationPath: $dest}')
 
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
