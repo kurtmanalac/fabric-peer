@@ -9,7 +9,7 @@ MSP_DIR=${MSP_DIR:-/app/data/msp}
 FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
 command=${command:-fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@localhost:7054 --mspdir $FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
 command_json=$(jq -n --arg cmd "$command" '{command: $cmd}')
-source=${source:-$FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
+source=${source:-$CA_URL/$FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
 destination=${dest:-$CORE_PEER_MSPCONFIGPATH}
 path_json=$(jq -n --arg src "$source" --arg dest "$destination" '{sourcePath: $src, destinationPath: $dest}')
 
@@ -24,6 +24,10 @@ echo "🔐 Enrolling peer with Fabric CA..."
 curl -X POST $CA_URL/enroll \
     -H "Content-Type: application/json" \
     -d "$command_json"
+
+# --- Sync folders to be exposed ---
+echo "Exposing $source..."
+curl -X GET $CA_URL/mkdir/$ENROLL_ID
 
 # --- Copy MSP files ---
 echo "Copying MSP files from $source to $dest..."
