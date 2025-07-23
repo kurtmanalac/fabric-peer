@@ -7,8 +7,12 @@ set -e
 CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal:8000}
 MSP_DIR=${MSP_DIR:-/app/data/msp}
 FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
-# command='fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@localhost:7054 --mspdir $FABRIC_CA_CLIENT_HOME/$ENROLL_ID$'
-# json_payload=$(jq -n --arg cmd $command '{command: $cmd}')
+command=${command:-fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@localhost:7054 --mspdir $FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
+command_json=$(jq -n --arg cmd $command '{command: $cmd}')
+source=${source:-$FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
+source_json=$(jq -n --arg cmd $source '{sourcePath: $cmd}')
+dest=${dest:-$CORE_PEER_MSPCONFIGPATH}
+dest_json=$(jq -n --arg cmd $dest '{destinationPath: $cmd}')
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
 
 # --- Wait for the CA to be reachable ---
@@ -34,13 +38,13 @@ export FABRIC_CA_CLIENT_HOME
 echo "🔐 Enrolling peer with Fabric CA..."
 curl -X POST $CA_URL/enroll \
     -H "Content-Type: application/json" \
-    -d '{"command": "fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@localhost:7054 --mspdir $FABRIC_CA_CLIENT_HOME/$ENROLL_ID"}'
+    -d $command_json
 
 # --- Copy MSP files ---
 echo "Copying MSP files..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
-    -d '{"sourcePath": "$FABRIC_CA_CLIENT_HOME/$ENROLL_ID"}, {"destinationPath": "$CORE_PEER_MSPCONFIGPATH"}'
+    -d $source_json, $dest_json
 
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
