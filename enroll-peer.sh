@@ -10,7 +10,7 @@ FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
 command=${command:-fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@localhost:7054 --mspdir $FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
 command_json=$(jq -n --arg cmd "$command" '{command: $cmd}')
 source=${source:-$CA_URL$FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
-destination=${destination:-$CORE_PEER_MSPCONFIGPATH}
+destination=${destination:-$MSP_DIR}
 path_json=$(jq -n --arg src "$source" --arg dest "$destination" '{sourcePath: $src, destinationPath: $dest}')
 
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
