@@ -32,7 +32,7 @@ export FABRIC_CA_CLIENT_HOME
 echo "🔐 Enrolling peer with Fabric CA..."
 curl -X POST $CA_URL/enroll \
     -H "Content-Type: application/json" \
-    -d '{"command": "fabric-ca-client enroll -u {{ENROLL_ID}}:{{ENROLL_PW}}@localhost:7054 --mspdir {{FABRIC_CA_CLIENT_HOME}}/{{ENROLL_ID}}"}'
+    -d '{"command": "fabric-ca-client enroll -u http://{{ENROLL_ID}}:{{ENROLL_PW}}@localhost:7054 --mspdir {{FABRIC_CA_CLIENT_HOME}}/{{ENROLL_ID}}"}'
 
 # --- Copy MSP files ---
 echo "Copying MSP files..."
