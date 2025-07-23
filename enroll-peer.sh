@@ -31,7 +31,7 @@ dest_json=$(jq -n --arg cmd $dest '{destinationPath: $cmd}')
 # curl -s "$CA_URL/cainfo" | jq -r .result.CAChain > "$TLS_CERT_PATH"
 
 # --- Export required environment ---
-export FABRIC_CA_CLIENT_HOME
+# export FABRIC_CA_CLIENT_HOME
 # export FABRIC_CA_CLIENT_TLS_CERTFILES="$TLS_CERT_PATH"
 
 # --- Enroll the peer identity ---
