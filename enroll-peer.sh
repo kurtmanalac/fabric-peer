@@ -30,7 +30,7 @@ echo "Exposing $source..."
 curl -X GET $CA_URL/mkdir/$ENROLL_ID
 
 # --- Copy MSP files ---
-echo "Copying MSP files from $source to $dest..."
+echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
     -d "$path_json"
