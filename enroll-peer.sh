@@ -9,7 +9,7 @@ MSP_DIR=${MSP_DIR:-/app/data/$ENROLL_ID/}
 FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client/}
 command=${command:-fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@localhost:7054 --mspdir $MSP_DIR}
 command_json=$(jq -n --arg cmd "$command" '{command: $cmd}')
-source=${source:-$CA_URL$FABRIC_CA_CLIENT_HOME/$ENROLL_ID/}
+source=${source:-$CA_URL$FABRIC_CA_CLIENT_HOME$ENROLL_ID/}
 zip_json=$(jq -n --arg src "$source" '{sourcePath: $src, zipPath: ($src+".zip")}')
 destination=${destination:-$MSP_DIR}
 path_json=$(jq -n --arg src "$source" --arg dest "$destination" '{sourcePath: ($src + ".zip"), destinationPath: $dest}')
@@ -29,7 +29,7 @@ curl -X POST $CA_URL/enroll \
 # --- Sync folders to be exposed ---
 echo "Exposing $source..."
 curl -X GET $CA_URL/mkdir/$ENROLL_ID
-curl -I "${CA_URL}${FABRIC_CA_CLIENT_HOME}/${ENROLL_ID}/"
+curl -I "${CA_URL}${FABRIC_CA_CLIENT_HOME}${ENROLL_ID}/"
 # --- Copy MSP files ---
 
 echo "Zipping MSP files from $source..."
@@ -39,7 +39,7 @@ curl -X POST $CA_URL/zip-folder \
 ZIP_ID=$!
 wait $ZIP_ID
 
-curl -I "${CA_URL}${FABRIC_CA_CLIENT_HOME}/${ENROLL_ID}/"
+curl -I "${CA_URL}${FABRIC_CA_CLIENT_HOME}${ENROLL_ID}/"
 echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
