@@ -26,7 +26,7 @@ curl -X POST $CA_URL/enroll \
     -H "Content-Type: application/json" \
     -d "$command_json" &
 ENROLL_PID=$!
-wiat $ENROLL_PID
+wait $ENROLL_PID
 
 # --- Sync folders to be exposed ---
 echo "Exposing $source..."
