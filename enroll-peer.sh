@@ -24,7 +24,9 @@ path_json=$(jq -n --arg src "$source" --arg dest "$destination" '{sourcePath: ($
 echo "🔐 Enrolling peer with Fabric CA..."
 curl -X POST $CA_URL/enroll \
     -H "Content-Type: application/json" \
-    -d "$command_json"
+    -d "$command_json" &
+ENROLL_PID=$!
+wiat $ENROLL_PID
 
 # --- Sync folders to be exposed ---
 echo "Exposing $source..."
@@ -36,16 +38,16 @@ echo "Zipping MSP files from $source..."
 curl -X POST $CA_URL/zip-folder \
     -H "Content-Type: application/json" \
     -d "$zip_json" &
-ZIP_ID=$!
-wait $ZIP_ID
+ZIP_PID=$!
+wait $ZIP_PID
 
 curl -I "${CA_URL}${FABRIC_CA_CLIENT_HOME}${ENROLL_ID}/"
 echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
     -d "$path_json" &
-COPY_ID=$!
-wait $COPY_ID
+COPY_PID=$!
+wait $COPY_PID
 echo "Copied MSP files from $source to $destination!"
 # --- Start the peer ---
 # echo "🚀 Starting Fabric peer..."
