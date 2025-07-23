@@ -39,7 +39,7 @@ curl -X POST $CA_URL/zip-folder \
 ZIP_ID=$!
 wait $ZIP_ID
 
-curl -I ($source + ".zip")
+curl -I ("$source" + ".zip")
 echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
