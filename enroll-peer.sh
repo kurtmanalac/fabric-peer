@@ -35,6 +35,8 @@ curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
     -d "$path_json"
 
+wait
+
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
 peer node start
