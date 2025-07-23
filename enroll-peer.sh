@@ -38,5 +38,5 @@ COPY_ID=$!
 wait $COPY_ID
 
 # --- Start the peer ---
-echo "🚀 Starting Fabric peer..."
-peer node start
+# echo "🚀 Starting Fabric peer..."
+# peer node start
