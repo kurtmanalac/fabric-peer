@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y curl jq && apt-get clean
 
 # RUN mkdir -p /app/data/config
 RUN mkdir -p /app/data/files
-RUN mkdir -p /app/data/msp
+RUN mkdir -p /app/data/${ENROLL_ID}/msp
 # RUN chown -R root:root /app
 # RUN chmod -R 755 /app
 
