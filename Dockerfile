@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y curl jq && apt-get clean
 # RUN mkdir -p /app/data/config
 RUN mkdir -p /app/data/files
 RUN mkdir -p /app/data/msp
+RUN chown -R root:root /app
+RUN chmod -R 755 /app
 
 # ENV PATH="/usr/local/bin:$PATH"
 # ENV FABRIC_CFG_PATH=/app/data/config
