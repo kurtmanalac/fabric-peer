@@ -15,4 +15,4 @@ ENV CORE_PEER_FILESYSTEMPATH=/app/data/files
 WORKDIR /app/data
 COPY enroll-peer.sh /enroll-peer.sh
 RUN chmod +x /enroll-peer.sh
-CMD ["/enroll-peer.sh"]
+# CMD ["/enroll-peer.sh"]
