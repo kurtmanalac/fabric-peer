@@ -33,9 +33,9 @@ curl -X GET $CA_URL/mkdir/$ENROLL_ID
 echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
-    -d "$path_json"
-
-wait
+    -d "$path_json" &
+COPY_ID=$!
+wait $COPY_ID
 
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
