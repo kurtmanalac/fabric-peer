@@ -42,19 +42,24 @@ curl -X POST $CA_URL/zip-folder \
 
 # if test -f /app/data/$ENROLL_ID.zip; then echo "ok"; else echo "no sad"; fi
 mkdir -p /app/data/$ENROLL_ID
-curl -o /app/data/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$source.zip
+curl -o /app/data/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$source.zip &
+COPY_PID=$!
+wait $COPY_PID
+
 unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip
+ZIP_PID=$!
+wait $ZIP_PID
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
 # curl -X POST $CA_URL/copy-msp \
 #     -H "Content-Type: application/json" \
 #     -d "$path_json" 
 # # COPY_PID=$!
 # # wait $COPY_PID
-if test -d /app/data/$ENROLL_ID/msp; then echo "ok"; else echo "no sad"; fi
+# if test -d /app/data/$ENROLL_ID/msp; then echo "ok"; else echo "no sad"; fi
 # ls
 # echo "Copied MSP files from $CA_URL$source.zip to $destination!"
 # if test -d /app/peer1; then echo "ok"; else echo "no sad"; fi
 # ls /app
 # --- Start the peer ---
-# echo "🚀 Starting Fabric peer..."
-# peer node start
+echo "🚀 Starting Fabric peer..."
+peer node start
