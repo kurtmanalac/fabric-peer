@@ -49,9 +49,10 @@ curl -X POST $CA_URL/copy-msp \
 # COPY_PID=$!
 # wait $COPY_PID
 if test -d /app/data; then echo "ok"; else echo "no sad"; fi
-ls /app/data
+ls
 echo "Copied MSP files from $CA_URL$source.zip to $destination!"
 if test -d /app/peer1; then echo "ok"; else echo "no sad"; fi
+ls /app
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
 peer node start
