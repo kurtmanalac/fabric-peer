@@ -46,7 +46,7 @@ curl -o /app/data/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$source.zip &
 COPY_PID=$!
 wait $COPY_PID
 
-unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip
+unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip &
 UNZIP_PID=$!
 wait $UNZIP_PID
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
