@@ -51,7 +51,7 @@ UNZIP_PID=$!
 wait $UNZIP_PID
 rm -r /app/data/$ENROLL_ID/$ENROLL_ID.zip
 
-zip_json=$(jq -n --arg src "/app/data/fabric-ca-client/$ADMIN_ID/msp/cacerts" '{sourceFolder: $src, zipPath: ($src+".zip")}')
+zip_json=$(jq -n --arg src "/app/data/fabric-ca-client/$ADMIN_ID/msp/signcerts" '{sourceFolder: $src, zipPath: ($src+".zip")}')
 echo "Zipping MSP files..."
 curl -X POST $CA_URL/zip-folder \
     -H "Content-Type: application/json" \
@@ -60,7 +60,7 @@ ZIP_PID=$!
 wait $ZIP_PID
 
 mkdir -p /app/data/$ENROLL_ID/msp/admincerts
-curl -o /app/data/$ENROLL_ID/msp/admincerts/admincerts.zip $CA_URL/app/data/fabric-ca-client/$ADMIN_ID/msp/cacerts.zip &
+curl -o /app/data/$ENROLL_ID/msp/admincerts/admincerts.zip $CA_URL/app/data/fabric-ca-client/$ADMIN_ID/msp/signcerts.zip &
 ADMIN_PID=$!
 wait $ADMIN_PID
 
