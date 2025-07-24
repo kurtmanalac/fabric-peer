@@ -7,7 +7,7 @@ set -e
 CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal:8000}
 MSP_DIR=${MSP_DIR:-/app/data/fabric-ca-client/$ENROLL_ID/msp}
 FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client/}
-csrNames=${csrNames:-"C=US,ST=California,L=San Francisco,O=upmo,OU=peer"}
+csrNames=${csrNames:-C=US,ST=California,L=SanFrancisco,O=upmo,OU=peer}
 command=${command:-fabric-ca-client enroll -u http://$ENROLL_ID:$ENROLL_PW@github-fabric-ca.railway.internal:7054 --mspdir $MSP_DIR --csr.hosts $ENROLL_ID,github-fabric-ca.railway.internal --csr.names $csrNames}
 command_json=$(jq -n --arg cmd "$command" '{command: $cmd}')
 source=${source:-/app/data/fabric-ca-client/$ENROLL_ID}
