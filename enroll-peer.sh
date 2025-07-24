@@ -49,6 +49,7 @@ wait $COPY_PID
 unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip -d /app/data/$ENROLL_ID/ &
 UNZIP_PID=$!
 wait $UNZIP_PID
+rm -r /app/data/$ENROLL_ID/$ENROLL_ID.zip
 
 zip_json=$(jq -n --arg src "/app/data/fabric-ca-client/$ADMIN_ID/msp/cacerts" '{sourceFolder: $src, zipPath: ($src+".zip")}')
 echo "Zipping MSP files..."
@@ -66,7 +67,8 @@ wait $ADMIN_PID
 unzip -o /app/data/$ENROLL_ID/msp/admincerts/admincerts.zip -d /app/data/$ENROLL_ID/msp/admincerts &
 UNZIP_PID=$!
 wait $UNZIP_PID
-ls /app/data/$ENROLL_ID/
+rm -r /app/data/$ENROLL_ID/msp/admincerts/admincerts.zip
+
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
 # curl -X POST $CA_URL/copy-msp \
 #     -H "Content-Type: application/json" \
