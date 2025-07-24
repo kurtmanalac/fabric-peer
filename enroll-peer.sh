@@ -42,13 +42,13 @@ curl -X POST $CA_URL/zip-folder \
 # wait $ZIP_PID
 
 curl -I $CA_URL$source.zip
-echo "Copying MSP files from $source to $destination..."
+echo "Copying MSP files from $CA_URL$source.zip to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
     -d "$path_json" 
 # COPY_PID=$!
 # wait $COPY_PID
-echo "Copied MSP files from $source to $destination!"
+echo "Copied MSP files from $CA_URL$source.zip to $destination!"
 # --- Start the peer ---
-# echo "🚀 Starting Fabric peer..."
-# peer node start
+echo "🚀 Starting Fabric peer..."
+peer node start
