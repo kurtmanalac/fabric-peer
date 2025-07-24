@@ -41,7 +41,7 @@ curl -X POST $CA_URL/zip-folder \
 # ZIP_PID=$!
 # wait $ZIP_PID
 
-curl -I $CA_URL$FABRIC_CA_CLIENT_HOME$ENROLL_ID
+curl -I $CA_URL$source.zip
 echo "Copying MSP files from $source to $destination..."
 curl -X POST $CA_URL/copy-msp \
     -H "Content-Type: application/json" \
