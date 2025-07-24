@@ -49,6 +49,8 @@ wait $COPY_PID
 unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip &
 UNZIP_PID=$!
 wait $UNZIP_PID
+
+ls /app/data/$ENROLL_ID/
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
 # curl -X POST $CA_URL/copy-msp \
 #     -H "Content-Type: application/json" \
@@ -61,5 +63,5 @@ wait $UNZIP_PID
 # if test -d /app/peer1; then echo "ok"; else echo "no sad"; fi
 # ls /app
 # --- Start the peer ---
-echo "🚀 Starting Fabric peer..."
-peer node start
+# echo "🚀 Starting Fabric peer..."
+# peer node start
