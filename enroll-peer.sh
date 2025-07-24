@@ -41,6 +41,7 @@ curl -X POST $CA_URL/zip-folder \
 # wait $ZIP_PID
 
 # if test -f /app/data/$ENROLL_ID.zip; then echo "ok"; else echo "no sad"; fi
+mkdir -p /app/data/$ENROLL_ID
 curl -o /app/data/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$source.zip
 unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
