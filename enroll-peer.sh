@@ -43,8 +43,8 @@ curl -X POST $CA_URL/zip-folder \
 
 curl -I $CA_URL$source.zip
 curl -o /app/data/$ENROLL_ID.zip $CA_URL$source.zip
-if test -d /app/data/$ENROLL_ID; then echo "ok"; else echo "no sad"; fi
-unzip /app/data/$ENROLL_ID.zip
+if test -f /app/data/$ENROLL_ID.zip; then echo "ok"; else echo "no sad"; fi
+unzip -y /app/data/$ENROLL_ID.zip
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
 # curl -X POST $CA_URL/copy-msp \
 #     -H "Content-Type: application/json" \
