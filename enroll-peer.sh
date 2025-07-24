@@ -46,7 +46,7 @@ curl -o /app/data/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$source.zip &
 COPY_PID=$!
 wait $COPY_PID
 
-unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip &
+unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip -d /app/data/$ENROLL_ID/ &
 UNZIP_PID=$!
 wait $UNZIP_PID
 
@@ -63,5 +63,5 @@ ls /app/data/$ENROLL_ID/
 # if test -d /app/peer1; then echo "ok"; else echo "no sad"; fi
 # ls /app
 # --- Start the peer ---
-# echo "🚀 Starting Fabric peer..."
-# peer node start
+echo "🚀 Starting Fabric peer..."
+peer node start
