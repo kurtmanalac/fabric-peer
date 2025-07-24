@@ -12,7 +12,7 @@ command_json=$(jq -n --arg cmd "$command" '{command: $cmd}')
 source=${source:-/app/data/fabric-ca-client/$ENROLL_ID}
 zip_json=$(jq -n --arg src "$source" '{sourceFolder: $src, zipPath: ($src+".zip")}')
 destination=${destination:-/app/data/$ENROLL_ID}
-path_json=$(jq -n --arg src "$CA_URL$source" --arg dest "$destination" '{sourcePath: ($src + ".zip"), destinationPath: $dest}')
+path_json=$(jq -n --arg src "$CA_URL$source.zip" --arg dest "$destination" '{sourcePath: $src, destinationPath: $dest}')
 
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
 
