@@ -43,6 +43,7 @@ curl -X POST $CA_URL/zip-folder \
 
 curl -I $CA_URL$source.zip
 curl -o curl -o /app/data/$ENROLL_ID.zip $CA_URL$source.zip
+unzip /app/data/$ENROLL_ID.zip
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
 # curl -X POST $CA_URL/copy-msp \
 #     -H "Content-Type: application/json" \
