@@ -31,7 +31,6 @@ curl -X POST $CA_URL/enroll \
 # --- Sync folders to be exposed ---
 # echo "Exposing $source..."
 # curl -X GET $CA_URL/mkdir/$ENROLL_ID
-curl -I $CA_URL/app/data/fabric-ca-client
 # --- Copy MSP files ---
 
 echo "Zipping MSP files from $source..."
@@ -41,10 +40,9 @@ curl -X POST $CA_URL/zip-folder \
 # ZIP_PID=$!
 # wait $ZIP_PID
 
-curl -I $CA_URL$source.zip
+# if test -f /app/data/$ENROLL_ID.zip; then echo "ok"; else echo "no sad"; fi
 curl -o /app/data/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$source.zip
-if test -f /app/data/$ENROLL_ID.zip; then echo "ok"; else echo "no sad"; fi
-unzip -o /app/data/$ENROLL_ID.zip
+unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip
 # echo "Copying MSP files from $CA_URL$source.zip to $destination..."
 # curl -X POST $CA_URL/copy-msp \
 #     -H "Content-Type: application/json" \
