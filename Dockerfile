@@ -6,7 +6,7 @@ RUN mkdir -p /app/data/files
 
 ENV CORE_PEER_FILESYSTEMPATH=/app/data/files
 
-WORKDIR /app
 COPY enroll-peer.sh /app/enroll-peer.sh
 RUN chmod +x /app/enroll-peer.sh
+WORKDIR /app
 CMD ["/app/enroll-peer.sh"]
