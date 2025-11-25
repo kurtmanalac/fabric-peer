@@ -3,7 +3,7 @@
 # Exit on any error
 set -e
 
-curl -v http://github-fabric-ca.railway.internal:8000/health
+# curl -v http://github-fabric-ca.railway.internal:8000/health 
 
 # --- CONFIGURATION ---
 CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal:8000}
