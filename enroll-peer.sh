@@ -29,7 +29,7 @@ sleep 5
 
 # generate nodeOUs
 MSP_DIR=${MSP_DIR:-$FABRIC_CA_CLIENT_HOME/$ENROLL_ID/msp}
-CA_CERT_FILE=${CA_CERT_FILE:-cacerts/localhost-7054.pem}
+CA_CERT_FILE=${CA_CERT_FILE:-cacerts/github-fabric-ca.railway.internal-7054.pem}
 nodeou_json=$(jq -n --arg script "nodeOU-create.sh" --arg msp "$MSP_DIR" --arg cert "$CA_CERT_FILE" '{"shellScript": $script, "envVar": {"MSP_DIR": $msp, "CA_CERT_FILE": $cert}}')
 curl -X POST $CA_URL/invoke-script \
     -H "Content-Type: application/json" \
