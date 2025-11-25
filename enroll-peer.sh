@@ -11,7 +11,7 @@ FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
 customCmd=${customCmd:---csr.hosts $RAILWAY_SERVICE_NAME,$RAILWAY_PRIVATE_DOMAIN --csr.names C=US,ST=California,L=SanFrancisco,O=upmo,OU=peer}
 enroll_json=$(jq -n --arg id "$ENROLL_ID" --arg pw "$ENROLL_PW" --arg cmd "$customCmd" '{userId: $id, userPw: $pw, customCmd: $cmd}')
 zip_json=$(jq -n --arg src "$FABRIC_CA_CLIENT_HOME/$ENROLL_ID" '{sourceFolder: $src, zipPath: ($src+".zip")}')
-clean_json=$(jq -n --arg script "clean-zip.sh" --arg folder "$FABRIC_CA_CLIENT_HOME/$ENROLL_ID/$ENROLL_ID.zip" '{"shellScript": $script, "envVar": {"CLEAN_ID_ZIP": $folder}}')
+clean_json=$(jq -n --arg script "clean-zip.sh" --arg folder "$FABRIC_CA_CLIENT_HOME/$ENROLL_ID.zip" '{"shellScript": $script, "envVar": {"CLEAN_ID_ZIP": $folder}}')
 
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
 
