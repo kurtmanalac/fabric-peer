@@ -5,12 +5,11 @@ set -e
 
 # --- CONFIGURATION ---
 CA_URL=${CA_URL:-http://github-fabric-ca.railway.internal:8000}
-MSP_DIR=${MSP_DIR:-/app/data/fabric-ca-client/$ENROLL_ID/msp}
-FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client/}
+FABRIC_CA_CLIENT_HOME=${FABRIC_CA_CLIENT_HOME:-/app/data/fabric-ca-client}
 customCmd=${customCmd:---csr.hosts $RAILWAY_SERVICE_NAME,$RAILWAY_PRIVATE_DOMAIN --csr.names C=US,ST=California,L=SanFrancisco,O=upmo,OU=peer}
 enroll_json=$(jq -n --arg id "$ENROLL_ID" --arg pw "$ENROLL_PW" --arg cmd "$customCmd" '{userId: $id, userPw: $pw, customCmd: $cmd}')
-source=${source:-/app/data/fabric-ca-client/$ENROLL_ID}
-zip_json=$(jq -n --arg src "$source" '{sourceFolder: $src, zipPath: ($src+".zip")}')
+zip_json=$(jq -n --arg src "$FABRIC_CA_CLIENT_HOME/$ENROLL_ID" '{sourceFolder: $src, zipPath: ($src+".zip")}')
+clean_json=$(jq -n --arg script "clean-zip.sh" --arg folder "$FABRIC_CA_CLIENT_HOME/$ENROLL_ID/$ENROLL_ID.zip" '{"shellScript": $script, "envVar": {"CLEAN_ID_ZIP": $folder}}')
 
 # TLS_CERT_PATH=${TLS_CERT_PATH:-$FABRIC_CA_CLIENT_HOME/ca-cert.pem}
 
@@ -22,45 +21,53 @@ zip_json=$(jq -n --arg src "$source" '{sourceFolder: $src, zipPath: ($src+".zip"
 echo "🔐 Enrolling peer with Fabric CA..."
 curl -X POST $CA_URL/enroll \
     -H "Content-Type: application/json" \
-    -d "$enroll_json" &
-ENROLL_PID=$!
-wait $ENROLL_PID
+    -d "$enroll_json"
 
-echo "Zipping MSP files from $source..."
+sleep 5
+
+# generate nodeOUs
+MSP_DIR=${MSP_DIR:-$FABRIC_CA_CLIENT_HOME/$ENROLL_ID/msp}
+CA_CERT_FILE=${CA_CERT_FILE:-cacerts/ca-cert.pem}
+nodeou_json=$(jq -n --arg script "nodeOU-create.sh" --arg msp "$MSP_DIR" --arg cert "$CA_CERT_FILE" '{"shellScript": $script, "envVar": {"MSP_DIR": $msp, "CA_CERT_FILE": $cert}}')
+curl -X POST $CA_URL/invoke-script \
+    -H "Content-Type: application/json" \
+    -d "$nodeou_json"
+
+sleep 5
+
+echo "Zipping MSP files from $FABRIC_CA_CLIENT_HOME/$ENROLL_ID ..."
 curl -X POST $CA_URL/zip-folder \
     -H "Content-Type: application/json" \
-    -d "$zip_json"  &
-ZIP_PID=$!
-wait $ZIP_PID
+    -d "$zip_json"
 
-# if test -f /app/data/$ENROLL_ID.zip; then echo "ok"; else echo "no sad"; fi
-mkdir -p /app/data/$ENROLL_ID
-curl -o /app/data/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$source.zip &
-COPY_PID=$!
-wait $COPY_PID
+sleep 5
 
-unzip -o /app/data/$ENROLL_ID/$ENROLL_ID.zip -d /app/data/$ENROLL_ID/ &
-UNZIP_PID=$!
-wait $UNZIP_PID
-rm -r /app/data/$ENROLL_ID/$ENROLL_ID.zip
+echo "copying from $CA_URL to local peer container..."
+mkdir -p $FABRIC_CA_CLIENT_HOME/$ENROLL_ID
+curl -o $FABRIC_CA_CLIENT_HOME/$ENROLL_ID/$ENROLL_ID.zip $CA_URL$FABRIC_CA_CLIENT_HOME/$ENROLL_ID.zip
 
-zip_json=$(jq -n --arg src "/app/data/fabric-ca-client/$ADMIN_ID/msp/signcerts" '{sourceFolder: $src, zipPath: ($src+".zip")}')
-echo "Zipping MSP files..."
-curl -X POST $CA_URL/zip-folder \
+sleep 5
+
+echo "deleting zip file from $CA_URL..."
+curl -X POST $CA_URL/invoke-script \
     -H "Content-Type: application/json" \
-    -d "$zip_json"  &
-ZIP_PID=$!
-wait $ZIP_PID
+    -d "$clean_json"
 
-mkdir -p /app/data/$ENROLL_ID/msp/admincerts
-curl -o /app/data/$ENROLL_ID/msp/admincerts/admincerts.zip $CA_URL/app/data/fabric-ca-client/$ADMIN_ID/msp/signcerts.zip &
-ADMIN_PID=$!
-wait $ADMIN_PID
+echo "deleting zip file from local peer container..."
+unzip -o $FABRIC_CA_CLIENT_HOME/$ENROLL_ID/$ENROLL_ID.zip -d $FABRIC_CA_CLIENT_HOME/$ENROLL_ID/
 
-unzip -o /app/data/$ENROLL_ID/msp/admincerts/admincerts.zip -d /app/data/$ENROLL_ID/msp/admincerts &
-UNZIP_PID=$!
-wait $UNZIP_PID
-rm -r /app/data/$ENROLL_ID/msp/admincerts/admincerts.zip
+rm -r $FABRIC_CA_CLIENT_HOME/$ENROLL_ID/$ENROLL_ID.zip
+
+# invoke script transfer file to storage
+SOURCE_URL=${SOURCE_URL:-http://github-fabric-ca.railway.internal:8000}
+SOURCE_FOLDER=${SOURCE_FOLDER:-$FABRIC_CA_CLIENT_HOME/$ENROLL_ID}
+FOLDER_NAME=$ENROLL_ID
+temp_URL=${temp_URL:-http://fabric-tools-storage.railway.internal:8080}
+transfer_json=$(jq -n --arg script "transfer-file.sh" --arg url "$SOURCE_URL" --arg folder "$SOURCE_FOLDER" --arg name "$FOLDER_NAME" '{"shellScript": $script, "envVar": {"SOURCE_URL": $url, "SOURCE_FOLDER": $folder, "FOLDER_NAME": $name}}')
+echo "Transferring files to storage..."
+curl -X POST $temp_URL/invoke-script \
+    -H "Content-Type: application/json" \
+    -d "$transfer_json"
 
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
