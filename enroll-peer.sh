@@ -75,6 +75,7 @@ KEYFILE=$(find $FABRIC_CA_CLIENT_HOME/$ENROLL_ID/tls/keystore -type f -name '*_s
 
 export CORE_PEER_TLS_CERT_FILE=$FABRIC_CA_CLIENT_HOME/$ENROLL_ID/tls/signcerts/cert.pem
 export CORE_PEER_TLS_KEY_FILE=$KEYFILE
+export CORE_PEER_TLS_ROOTCERT_FILE=/dev/null
 sleep 5
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
