@@ -71,6 +71,11 @@ curl -X POST $temp_URL/invoke-script \
     -H "Content-Type: application/json" \
     -d "$transfer_json"
 
+KEYFILE=$(find $FABRIC_CA_CLIENT_HOME/$ENROLL_ID/tls/keystore -type f -name '*_sk')
+
+export CORE_PEER_TLS_CERT_FILE=$FABRIC_CA_CLIENT_HOME/$ENROLL_ID/tls/signcerts/cert.pem
+export CORE_PEER_TLS_KEY_FILE=$KEYFILE
+sleep 5
 # --- Start the peer ---
 echo "🚀 Starting Fabric peer..."
 peer node start
